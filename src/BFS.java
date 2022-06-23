@@ -38,12 +38,16 @@ class Solution {
         ArrayList<Integer> output = new ArrayList<>();
         Queue<Integer> queue = new LinkedList<>();
         queue.add(0);
+        output.add(0);
+        visited[0] = true;
         while (!queue.isEmpty()) {
             int vtx = queue.poll();
-            if (!visited[vtx]) {
-                visited[vtx] = true;
-                output.add(vtx);
-                queue.addAll(adj.get(vtx));
+            for (int elem : adj.get(vtx)) {
+                if (!visited[elem]) {
+                    visited[elem] = true;
+                    queue.add(elem);
+                    output.add(elem);
+                }
             }
         }
         return output;
