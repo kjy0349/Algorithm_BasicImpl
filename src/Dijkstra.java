@@ -7,8 +7,7 @@ class DriverClass
 {
     public static void main(String args[]) throws IOException {
 
-        BufferedReader read =
-                new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
         int t = Integer.parseInt(read.readLine());
         while (t-- > 0) {
             String str[] = read.readLine().trim().split(" ");
@@ -59,37 +58,47 @@ class Dijkstra
     //Function to find the shortest distance of all the vertices
     //from the source vertex S.
     static ArrayList<ArrayList<ArrayList<Integer>>> r_adj;
-    static int answer;
     static boolean[] visited;
-    public static void make_sol(int S, int target, int sub_sum) {
-        if (S == target) answer = sub_sum;
-        else {
-            int min_value = 2147483647;
-            int index = 0;
-            ArrayList<ArrayList<Integer>> arr = r_adj.get(S);
-            for (int i = 0; i < arr.size(); i++) {
-                if (!visited[arr.get(i).get(0)] && arr.get(i).get(1) < min_value) {
-                    min_value = arr.get(i).get(1);
-                    index = arr.get(i).get(0);
-                    if (arr.get(i).get(0) == target) break;
+    static int[] ret_arr;
+    public static Comparator<ArrayList<Integer>> comp = Comparator.comparing(o -> o.get(1));
+    public static void make_sol(int S) {
+        PriorityQueue<ArrayList<Integer>> queue = new PriorityQueue<>(comp);
+        for (ArrayList<Integer> elem : r_adj.get(S)) {
+            queue.add(elem);
+            ret_arr[elem.get(0)] = elem.get(1);
+        }
+        visited[S] = true;
+        ret_arr[S] = 0;
+        while (!queue.isEmpty()) {
+            ArrayList<Integer> edge = queue.poll();
+            int vtx = edge.get(0);
+            if (!visited[vtx]) {
+                for (ArrayList<Integer> elem : r_adj.get(vtx)) {
+                    int n_vtx = elem.get(0);
+                    int dist = elem.get(1);
+                    if (ret_arr[n_vtx] > ret_arr[vtx] + dist) {
+                        ret_arr[n_vtx] = ret_arr[vtx] + dist;
+                    }
+                    if (!visited[n_vtx]) {
+                        queue.add(new ArrayList<>((
+                                Arrays.asList(n_vtx, ret_arr[n_vtx])
+                                )));
+                    }
                 }
+                visited[vtx] = true;
             }
-            visited[index] = true;
-            make_sol(index, target, sub_sum + min_value);
         }
     }
+
+
     static int[] dijkstra(int V, ArrayList<ArrayList<ArrayList<Integer>>> adj, int S)
     {
         // Write your code here
         r_adj = adj;
-        int[] ret_arr = new int[V];
-        for (int i = 0; i < ret_arr.length; i++) {
-            answer = 0;
-            visited = new boolean[V];
-            visited[S] = true;
-            make_sol(S, i, 0);
-            ret_arr[i] = answer;
-        }
+        ret_arr = new int[V];
+        Arrays.fill(ret_arr, Integer.MAX_VALUE);
+        visited = new boolean[V];
+        make_sol(S);
         return ret_arr;
     }
 }

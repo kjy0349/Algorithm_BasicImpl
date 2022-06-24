@@ -3,7 +3,7 @@
 import java.util.*;
 import java.lang.*;
 import java.io.*;
-class GFG {
+class GFG2 {
     public static void main(String[] args) throws IOException {
         BufferedReader br =
                 new BufferedReader(new InputStreamReader(System.in));
@@ -39,12 +39,16 @@ class DFS {
     static ArrayList<Integer> ret_arr;
     static ArrayList<ArrayList<Integer>> r_adj;
 
+    public static Comparator<ArrayList<Integer>> comp = Comparator.comparing(o -> o.get(1));
+    PriorityQueue<ArrayList<Integer>> queue = new PriorityQueue<>(comp);
+
     public static void dfs(int vertex) {
         if (!visited[vertex]) {
             visited[vertex] = true;
             ret_arr.add(vertex);
             for (int elem : r_adj.get(vertex)) {
                 dfs(elem);
+
             }
         }
     }
