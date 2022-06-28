@@ -39,8 +39,9 @@ class DFS {
     static ArrayList<Integer> ret_arr;
     static ArrayList<ArrayList<Integer>> r_adj;
 
-    public static Comparator<ArrayList<Integer>> comp = Comparator.comparing(o -> o.get(1));
-    PriorityQueue<ArrayList<Integer>> queue = new PriorityQueue<>(comp);
+    public static Comparator<ArrayList<Integer>> comp = Comparator.comparing(o -> o.get(0));
+    public static Comparator<ArrayList<Integer>> comp1 = Comparator.comparing(o -> o.get(1));
+    PriorityQueue<ArrayList<Integer>> queue = new PriorityQueue<>(comp.thenComparing(comp1));
 
     public static void dfs(int vertex) {
         if (!visited[vertex]) {
